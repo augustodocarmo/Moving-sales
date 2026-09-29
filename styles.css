@@ -34,6 +34,33 @@ img { display: block; max-width: 100%; }
   padding: 72px 20px 64px;
 }
 .hero__inner { width: min(1120px, 100%); margin: 0 auto; }
+
+.sale-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 0 0 22px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 12px;
+  background: rgba(255,255,255,.07);
+  color: #fff;
+  font-size: .75rem;
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+.sale-banner__flag {
+  display: inline-block;
+  padding: 6px 9px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: white;
+}
+.sale-banner__offer {
+  color: #f3d7a6;
+}
 .eyebrow, .section-kicker {
   margin: 0 0 12px;
   font-size: .78rem;
