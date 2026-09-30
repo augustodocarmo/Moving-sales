@@ -6,6 +6,12 @@ const CONTACT = {
   contactName: "Augusto & Juliana"
 };
 
+const PRICE_OVERRIDES = {
+  airfryer: 12,
+  kettle: 7,
+  toaster: 7
+};
+
 const products = [
   {
     id: "sofa", syncKey: "2-Seater Sofa (Light Blue)", name: "2-Seater Sofa (Light Blue)", price: 120,
@@ -83,17 +89,17 @@ const products = [
     images: ["cookware-1.webp"]
   },
   {
-    id: "toaster", syncKey: "Ribbed 2-Slice Toaster", name: "Ribbed 2-Slice Toaster", price: 12,
+    id: "toaster", syncKey: "Ribbed 2-Slice Toaster", name: "Ribbed 2-Slice Toaster", price: 7,
     category: "Kitchen", description: "Ribbed 2-slice toaster in taupe/beige, matching kettle. Used less than 3 months, excellent condition. 7 browning settings, defrost/reheat/cancel, warming rack, wide slots, removable crumb tray",
     images: ["toaster-1.webp", "toaster-2.webp", "toaster-3.webp", "toaster-4.webp"]
   },
   {
-    id: "kettle", syncKey: "Ribbed Electric Kettle 1.7L", name: "Ribbed Electric Kettle 1.7L", price: 12,
+    id: "kettle", syncKey: "Ribbed Electric Kettle 1.7L", name: "Ribbed Electric Kettle 1.7L", price: 7,
     category: "Kitchen", description: "Ribbed electric kettle in taupe/beige, matching toaster. Used less than 3 months, excellent condition. Fluted design, matte finish, water level window, removable limescale filter, cordless 360° base",
     images: ["kettle-1.webp", "kettle-2.webp", "kettle-3.webp"]
   },
   {
-    id: "airfryer", syncKey: "Ribbed Digital Air Fryer", name: "Ribbed Digital Air Fryer", price: 20,
+    id: "airfryer", syncKey: "Ribbed Digital Air Fryer", name: "Ribbed Digital Air Fryer", price: 12,
     category: "Kitchen", description: "Ribbed digital air fryer in taupe/beige, matching kettle and toaster. Used less than 3 months, excellent condition. Digital touchscreen, adjustable temp/timer, 8 presets, shake reminder, keep warm, non-stick basket with removable crisper plate",
     images: ["airfryer-4.webp", "airfryer-1.webp", "airfryer-2.webp", "airfryer-3.webp", "airfryer-5.webp"]
   },
@@ -321,7 +327,7 @@ async function syncFromSheet() {
       const livePrice = priceFromCell(r[ix["Price (£)"]]);
       return {
         ...p,
-        price: livePrice ?? p.price,
+        price: PRICE_OVERRIDES[p.id] ?? livePrice ?? p.price,
         description: r[ix["Description"]] || p.description,
         status: r[ix["Status"]] || p.status
       };
