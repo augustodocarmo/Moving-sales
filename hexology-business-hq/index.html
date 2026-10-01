@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light" />
+  <title>Hexology Business HQ</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <div id="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">H</div>
+        <div>
+          <strong>Hexology</strong>
+          <span>Business HQ</span>
+        </div>
+      </div>
+
+      <nav id="nav" class="nav">
+        <button class="nav-item active" data-view="today">Today</button>
+        <button class="nav-item" data-view="priorities">Priorities</button>
+        <button class="nav-item" data-view="kanban">Kanban</button>
+        <button class="nav-item" data-view="master">Master List</button>
+        <button class="nav-item" data-view="crm">CRM</button>
+        <button class="nav-item" data-view="metrics">Business Metrics</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div id="connectionState" class="connection-state offline">
+          <span class="dot"></span>
+          <span>Not connected</span>
+        </div>
+        <button id="setupButton" class="text-button">Connection settings</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">INTERNAL OPERATING SYSTEM</p>
+          <h1 id="pageTitle">Today</h1>
+          <p id="pageSubtitle" class="subtitle">See what matters now.</p>
+        </div>
+        <div class="topbar-actions">
+          <span id="lastRefresh" class="muted"></span>
+          <button id="refreshButton" class="button secondary" disabled>Refresh</button>
+          <button id="connectButton" class="button primary">Connect Google</button>
+        </div>
+      </header>
+
+      <section id="content" class="content">
+        <div class="welcome-card">
+          <p class="eyebrow">READY TO CONNECT</p>
+          <h2>Your Google Sheet stays in control.</h2>
+          <p>This dashboard reads live from <strong>Hexology Execution HQ</strong>. Connect Google to load your tasks, priorities, CRM and business metrics.</p>
+          <button id="welcomeConnect" class="button primary">Connect Google</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="setupDialog" class="setup-dialog">
+    <form method="dialog" id="setupForm">
+      <div class="dialog-header">
+        <div>
+          <p class="eyebrow">ONE-TIME SETUP</p>
+          <h2>Google connection</h2>
+        </div>
+        <button id="closeSetup" type="button" class="icon-button" aria-label="Close">×</button>
+      </div>
+
+      <label>
+        Google OAuth Client ID
+        <input id="clientIdInput" type="text" autocomplete="off" placeholder="123456789-abc.apps.googleusercontent.com" />
+      </label>
+
+      <label>
+        Spreadsheet ID
+        <input id="sheetIdInput" type="text" autocomplete="off" />
+      </label>
+
+      <p class="help">The client ID is stored only in this browser. No client secret is required or stored in GitHub.</p>
+
+      <div class="dialog-actions">
+        <button id="cancelSetup" type="button" class="button secondary">Cancel</button>
+        <button id="saveSetup" value="default" class="button primary">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" aria-live="polite"></div>
+  <script src="./app.js"></script>
+</body>
+</html>
