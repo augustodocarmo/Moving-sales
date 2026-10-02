@@ -2,7 +2,7 @@ const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1RRfFIgn3BOQv8uJ4q
 
 // Contact can be added later without changing the page layout.
 const CONTACT = {
-  whatsappNumber: "", // Example: 447700900000 (digits only, including country code)
+  whatsappNumber: "447423451354",
   contactName: "Augusto & Juliana"
 };
 
