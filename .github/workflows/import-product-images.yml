@@ -1,0 +1,24 @@
+name: Import product images
+on:
+  push:
+    paths:
+      - '.github/workflows/import-product-images.yml'
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download product images
+        run: |
+          mkdir -p assets/images
+          curl -L --fail 'https://media.canva.com/v2/image-resize/format:JPG/height:200/quality:75/uri:ifs%3A%2F%2FM%2Fa341adc5-df33-40bb-bcdc-e2c62000c29f/watermark:F/width:160?csig=AAAAAAAAAAAAAAAAAAAAAC7-6Cwfq5gVdRZHL7-B9SSVaUnrBDidYJO6ElmvP0P1&exp=1791394665&osig=AAAAAAAAAAAAAAAAAAAAAEy9YOqF5FAkJeZZaBEyZOhpyBbpmuXroLBaWcRnw7LA&signer=media-rpc&token=AAIAAU0AJGEzNDFhZGM1LWRmMzMtNDBiYi1iY2RjLWUyYzYyMDAwYzI5ZgAAAAABoRdxUigZJgIrFzvLeAwUOObd-2juWfR1Fq1Eg8j2O95H8fcwlw&x-canva-quality=thumbnail' -o assets/images/bokken-site.jpg
+          curl -L --fail 'https://media.canva.com/v2/image-resize/format:JPG/height:200/quality:75/uri:ifs%3A%2F%2FM%2F8748e110-2de6-4605-bdca-b1fbf5cc65ce/watermark:F/width:92?csig=AAAAAAAAAAAAAAAAAAAAAK2cbAm_Q6oa79rm_v3at5uiTYQE1ZzQ9QaVJhs6yEEX&exp=1791397570&osig=AAAAAAAAAAAAAAAAAAAAAFSg84sFdB9GHL0loU2f2BscOcOpDXh7K0y3JAHayNS9&signer=media-rpc&token=AAIAAU0AJDg3NDhlMTEwLTJkZTYtNDYwNS1iZGNhLWIxZmJmNWNjNjVjZQAAAAABoRedpdBD13BbH-btlOGmT48qHZJGHJVm8HyEMHEYHygKaEc_QA&x-canva-quality=thumbnail' -o assets/images/mini-vacuum.jpg
+      - name: Commit images
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/images/bokken-site.jpg assets/images/mini-vacuum.jpg
+          git diff --cached --quiet || git commit -m "Self-host product images"
+          git push
