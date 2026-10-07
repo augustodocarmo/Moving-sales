@@ -10,18 +10,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Download product images
+      - name: Download full-resolution product images
         run: |
           mkdir -p assets/images
-          curl -L --fail 'https://media.canva.com/v2/image-resize/format:JPG/height:200/quality:75/uri:ifs%3A%2F%2FM%2Fa341adc5-df33-40bb-bcdc-e2c62000c29f/watermark:F/width:160?csig=AAAAAAAAAAAAAAAAAAAAAC7-6Cwfq5gVdRZHL7-B9SSVaUnrBDidYJO6ElmvP0P1&exp=1791394665&osig=AAAAAAAAAAAAAAAAAAAAAEy9YOqF5FAkJeZZaBEyZOhpyBbpmuXroLBaWcRnw7LA&signer=media-rpc&token=AAIAAU0AJGEzNDFhZGM1LWRmMzMtNDBiYi1iY2RjLWUyYzYyMDAwYzI5ZgAAAAABoRdxUigZJgIrFzvLeAwUOObd-2juWfR1Fq1Eg8j2O95H8fcwlw&x-canva-quality=thumbnail' -o assets/images/bokken-site.jpg
-          curl -L --fail 'https://media.canva.com/v2/image-resize/format:JPG/height:200/quality:75/uri:ifs%3A%2F%2FM%2F8748e110-2de6-4605-bdca-b1fbf5cc65ce/watermark:F/width:92?csig=AAAAAAAAAAAAAAAAAAAAAK2cbAm_Q6oa79rm_v3at5uiTYQE1ZzQ9QaVJhs6yEEX&exp=1791397570&osig=AAAAAAAAAAAAAAAAAAAAAFSg84sFdB9GHL0loU2f2BscOcOpDXh7K0y3JAHayNS9&signer=media-rpc&token=AAIAAU0AJDg3NDhlMTEwLTJkZTYtNDYwNS1iZGNhLWIxZmJmNWNjNjVjZQAAAAABoRedpdBD13BbH-btlOGmT48qHZJGHJVm8HyEMHEYHygKaEc_QA&x-canva-quality=thumbnail' -o assets/images/mini-vacuum.jpg
+          curl -L --fail 'https://export-download.canva.com/c37f87f9-1b3b-445b-b73a-744d5b51707e/0/0001-6517226901968967592.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261007%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261007T113120Z&X-Amz-Expires=14951&X-Amz-Signature=50a1e1faadd24bd6d8ed964e59b70a2fe5963c6100b1dfd76b25cfbe3a6be9a7&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2007%20Oct%202026%2015%3A40%3A31%20GMT' -o assets/images/bokken-site.png
+          curl -L --fail 'https://export-download.canva.com/b84a0e50-1248-4794-a3f9-ee2a9d908a3a/0/0001-8341184751057522031.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261007%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261007T123747Z&X-Amz-Expires=13399&X-Amz-Signature=2c5b320d78054647c5a792ec620008e61ebdd202d91ea677d7fabc923fb4c544&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2007%20Oct%202026%2016%3A21%3A06%20GMT' -o assets/images/mini-vacuum.png
+          file assets/images/bokken-site.png assets/images/mini-vacuum.png
       - name: Commit images through GitHub API
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          for file in assets/images/bokken-site.jpg assets/images/mini-vacuum.jpg; do
+          for file in assets/images/bokken-site.png assets/images/mini-vacuum.png; do
             content=$(base64 -w 0 "$file")
             path=$(python -c 'import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))' "$file")
-            printf '{"message":"Self-host product image","content":"%s","branch":"main"}' "$content" > /tmp/body.json
+            sha=$(gh api "repos/${{ github.repository }}/contents/$file" --jq .sha 2>/dev/null || true)
+            if [ -n "$sha" ]; then
+              printf '{"message":"Replace pixelated product image","content":"%s","sha":"%s","branch":"main"}' "$content" "$sha" > /tmp/body.json
+            else
+              printf '{"message":"Add full-resolution product image","content":"%s","branch":"main"}' "$content" > /tmp/body.json
+            fi
             curl -L --fail-with-body -X PUT               -H "Authorization: Bearer $GH_TOKEN"               -H "Accept: application/vnd.github+json"               -H "X-GitHub-Api-Version: 2022-11-28"               "https://api.github.com/repos/${{ github.repository }}/contents/$path"               --data-binary @/tmp/body.json
           done
