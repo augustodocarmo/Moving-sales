@@ -1,6 +1,8 @@
-name: Import free item photos
+name: Import free table and crockery photos
 on:
-  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/import-free-items-20261014.yml'
 permissions:
   contents: write
 jobs:
@@ -8,4 +10,37 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: echo Preparing free item images
+      - name: Download original photos
+        run: |
+          set -euo pipefail
+          mkdir -p assets/images
+          curl -fLsS --retry 2 'https://export-download.canva.com/38f59158-1373-4490-9ac6-25950478a72b/0/0001-3238607102306968588.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261014%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261014T042636Z&X-Amz-Expires=50117&X-Amz-Signature=f685ae5860ae03cf49f851ec00aa30dbe9ab93aea0552665d36cb568ea59db9a&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2018%3A21%3A53%20GMT' -o assets/images/free-white-table-1.png
+          curl -fLsS --retry 2 'https://export-download.canva.com/b8f88486-fcad-4923-a2bf-91b27795e039/0/0001-3023560220239668285.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261013T223437Z&X-Amz-Expires=70824&X-Amz-Signature=b1d152be6c6dacdcf9deb2f52f62b842d5764a29807778500de9f982a6251e77&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2018%3A15%3A01%20GMT' -o assets/images/free-white-table-2.png
+          curl -fLsS --retry 2 'https://export-download.canva.com/6d9adad4-443a-4d14-8b50-b7fb6216f366/0/0001-5393579524016315408.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261014%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261014T032217Z&X-Amz-Expires=53172&X-Amz-Signature=ca67e9396064bbcc3970073d415498d0334ce0216f70770713ce2cffec6c26ee&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2018%3A08%3A29%20GMT' -o assets/images/free-dishes-1.png
+          curl -fLsS --retry 2 'https://export-download.canva.com/d057c285-eb92-4b64-909e-ce25f5cea3d5/0/0001-2636250653897629472.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261014%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261014T021846Z&X-Amz-Expires=58876&X-Amz-Signature=c69596c66cdc76b39a614569e70b8723f97eb058357fe9c2bb9c7008ff23af9d&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2018%3A40%3A02%20GMT' -o assets/images/free-dishes-2.png
+          curl -fLsS --retry 2 'https://export-download.canva.com/102cdc32-4ef3-4982-850f-fe063f242400/0/0001-556713524666915397.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261014%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261014T133646Z&X-Amz-Expires=18332&X-Amz-Signature=0e0c48215d5f6ea55bbeb3b96a704db2a3fb6299effe3a61e026088dcb6e1219&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2018%3A42%3A18%20GMT' -o assets/images/free-dishes-3.png
+          python3 - <<'PY'
+          import struct
+          for name in ["free-white-table-1","free-white-table-2","free-dishes-1","free-dishes-2","free-dishes-3"]:
+              path=f"assets/images/{name}.png"
+              with open(path,"rb") as f: header=f.read(24)
+              assert header[:8]==b'\x89PNG\r\n\x1a\n',path
+              w,h=struct.unpack(">II",header[16:24])
+              assert w>=500 and h>=500,(path,w,h)
+              print(path,w,h)
+          PY
+      - name: Commit original photos
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/images/free-white-table-*.png assets/images/free-dishes-*.png
+          git diff --cached --quiet && exit 0
+          git commit -m "Add original free table and dish set photos"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 3
+          done
+          exit 1
