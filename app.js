@@ -146,9 +146,9 @@ const products = [
     images: ["printer-1.webp", "printer-2.webp"]
   },
   {
-    id: "crockery", syncKey: "Kitchen Crockery Bundle (Plates, Cups & Glasses)", name: "Kitchen Crockery Bundle", price: 10,
-    category: "Kitchen", description: "Mixed plates, cups, mugs and drinking glasses, various sets. Good condition, moving abroad so clearing it all out. Photos on request",
-    images: []
+    id: "crockery", syncKey: "Kitchen Crockery Bundle (Plates, Cups & Glasses)", name: "Speckled Ceramic Dinner Set + Free Extras", price: 15,
+    category: "Kitchen", description: "£15 for the set: 4 large dinner plates, 2 smaller plates, 4 deep plates (soup/pasta bowls), 2 bowls and 1 mug. Matching neutral speckled ceramic. BONUS FREE items with small cosmetic chips: 2 plates, 1 bowl and 3 mugs. Collection in Warrington.",
+    images: ["crockery-1.png", "crockery-2.png", "crockery-3.png", "crockery-4.png", "crockery-5.png", "crockery-6.png"]
   },
   {
     id: "bedding", syncKey: "Bedding & Linens Bundle (Sheets, Pillowcases, Towels)", name: "Bedding & Linens Bundle", price: 10,
