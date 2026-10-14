@@ -1,0 +1,48 @@
+name: Import popcorn, Vax and cookware photos
+on:
+  push:
+    paths:
+      - '.github/workflows/import-new-products-20261014.yml'
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download and validate six product photos
+        run: |
+          set -euo pipefail
+          mkdir -p assets/images
+          curl -fLsS --retry 3 'https://export-download.canva.com/ad089e49-e087-4d3b-a5bf-cc39974d76fe/0/0001-4661744586751194083.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261013T172001Z&X-Amz-Expires=88848&X-Amz-Signature=f5be3ce7e096a6b06c8d3f7a61a319332b82fe6c4e8f6ec6090891d1d2fd9c57&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2018%3A00%3A49%20GMT' -o assets/images/popcorn-1.png
+          curl -fLsS --retry 3 'https://export-download.canva.com/a8b7a136-c4a3-411e-8d29-9adcd58143eb/0/0001-8231973190804317792.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261014%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261014T080432Z&X-Amz-Expires=34471&X-Amz-Signature=4a93f4ffd182803814fb485d7276883ed88ee3d43c54717c610a5cccbccc7fd5&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2017%3A39%3A03%20GMT' -o assets/images/popcorn-2.png
+          curl -fLsS --retry 3 'https://export-download.canva.com/d92eb0cf-4065-40e3-b02b-81b5c601eec9/0/0001-234706151058540671.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261014%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261014T050944Z&X-Amz-Expires=47785&X-Amz-Signature=2af1aab136df0dbe51957a0ac901b2e2bf7dd00db169b12b822eb2151d063d2e&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2018%3A26%3A09%20GMT' -o assets/images/vax-1.png
+          curl -fLsS --retry 3 'https://export-download.canva.com/0babc705-4c95-40c4-9f1a-007469ec8982/0/0001-3284768998951301587.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261014%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261014T062339Z&X-Amz-Expires=42033&X-Amz-Signature=21d8fab44dc08185888628ab3edafd510e062d87cf27918252f6d4ac57a72712&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2018%3A04%3A12%20GMT' -o assets/images/vax-2.png
+          curl -fLsS --retry 3 'https://export-download.canva.com/1975c328-a6f5-4c4e-9c2b-5422b76f5c20/0/0001-5063690854342547667.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261013T213852Z&X-Amz-Expires=71632&X-Amz-Signature=1b9305436c71eac41ca7c7c6745e7a80c053f7d1eac1ab79282f3dd572dc050c&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2017%3A32%3A44%20GMT' -o assets/images/yashe-cookware-1.png
+          curl -fLsS --retry 3 'https://export-download.canva.com/369e276d-8865-474b-85e7-b09dfed3a435/0/0001-4593064689886508035.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261014%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261014T084816Z&X-Amz-Expires=33489&X-Amz-Signature=ae75604197f1acc8b6b85d6e8a4980716a52c0bcb02d83aff0efc8957717cb8d&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2018%3A06%3A25%20GMT' -o assets/images/yashe-cookware-2.png
+          python3 - <<'PY'
+          import struct
+          files = ["assets/images/popcorn-1.png","assets/images/popcorn-2.png","assets/images/vax-1.png","assets/images/vax-2.png","assets/images/yashe-cookware-1.png","assets/images/yashe-cookware-2.png"]
+          for path in files:
+              with open(path, 'rb') as f:
+                  header=f.read(24)
+              assert header[:8]==b'\x89PNG\r\n\x1a\n',path
+              w,h=struct.unpack('>II',header[16:24])
+              assert w>=200 and h>=200,(path,w,h)
+              print(f'{path}: {w}x{h}')
+          PY
+      - name: Commit product photos
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/images/popcorn-*.png assets/images/vax-*.png assets/images/yashe-cookware-*.png
+          git diff --cached --quiet && exit 0
+          git commit -m "Add six photos for popcorn, Vax and YASHE cookware"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 3
+          done
+          exit 1
