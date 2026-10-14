@@ -61,6 +61,24 @@ const extraProducts = [
     category: "Kitchen",
     description: "Clear cake dome with a wooden serving base and top handle. Used condition, with visible scratches on the transparent cover as shown in the photograph. £5. Collection in Warrington.",
     images: ["cake-dome-1.png"]
+  },
+  {
+    id: "free-white-table",
+    syncKey: null,
+    name: "White Square Side Table – FREE",
+    price: 0,
+    category: "Furniture",
+    description: "White square side table with four legs, as pictured. FREE for collection by arrangement. Please confirm the collection location via WhatsApp before travelling. Delivery may be possible for an agreed fee.",
+    images: ["free-white-table-1.png", "free-white-table-2.png"]
+  },
+  {
+    id: "free-dishes-mugs",
+    syncKey: null,
+    name: "White Dishes, Bowls & Mugs – FREE",
+    price: 0,
+    category: "Kitchen",
+    description: "FREE assorted white plates, ribbed bowls and white/teal mugs shown in the photos. Offered together for collection in Warrington. Delivery may be possible for an agreed fee. Please confirm availability via WhatsApp.",
+    images: ["free-dishes-3.png", "free-dishes-1.png", "free-dishes-2.png"]
   }
 ];
 
