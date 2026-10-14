@@ -68,7 +68,7 @@ const extraProducts = [
     name: "White Square Side Table – FREE",
     price: 0,
     category: "Furniture",
-    description: "White square side table with four legs, as pictured. FREE for collection by arrangement. Please confirm the collection location via WhatsApp before travelling. Delivery may be possible for an agreed fee.",
+    description: "White square side table with four legs, as pictured. FREE. Collection can be arranged in Warrington or London. Please confirm the location and collection time via WhatsApp before travelling. Delivery may be possible for an agreed fee.",
     images: ["free-white-table-1.png", "free-white-table-2.png"]
   },
   {
@@ -77,7 +77,7 @@ const extraProducts = [
     name: "White Dishes, Bowls & Mugs – FREE",
     price: 0,
     category: "Kitchen",
-    description: "FREE assorted white plates, ribbed bowls and white/teal mugs shown in the photos. Offered together for collection in Warrington. Delivery may be possible for an agreed fee. Please confirm availability via WhatsApp.",
+    description: "FREE assorted white plates, ribbed bowls and white/teal mugs shown in the photos. Offered together. Collection can be arranged in Warrington or London. Please confirm the location and collection time via WhatsApp before travelling. Delivery may be possible for an agreed fee.",
     images: ["free-dishes-3.png", "free-dishes-1.png", "free-dishes-2.png"]
   }
 ];
