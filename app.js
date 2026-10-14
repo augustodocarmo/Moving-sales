@@ -211,7 +211,7 @@ const dialogContent = document.getElementById("dialogContent");
 const toast = document.getElementById("toast");
 
 function money(n) { const v = Number(n); return v === 0 ? "FREE" : `£${Number.isInteger(v) ? v.toFixed(0) : v.toFixed(2)}`; }
-function imagePath(name) { return /^(data:|https?:\/\/)/.test(String(name)) ? name : `assets/images/${name}`; }
+function imagePath(name) { const value = String(name); if (/^(data:|https?:\/\/)/.test(value)) return value; const version = /^(bokken-site|mini-vacuum)\.png$/.test(value) ? "?v=20261014" : ""; return `assets/images/${value}${version}`; }
 function escapeHtml(s = "") { return s.replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c])); }
 
 function buildFilters() {
