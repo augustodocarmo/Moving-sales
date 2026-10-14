@@ -1,0 +1,40 @@
+name: Import kitchen bundle images
+on:
+  push:
+    paths:
+      - '.github/workflows/import-kitchen-bundle.yml'
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download and validate kitchen bundle photos
+        run: |
+          set -euo pipefail
+          mkdir -p assets/images
+          curl -fLsS --retry 2 'https://export-download.canva.com/4fa3b370-5e80-4b94-8d71-f694f5c6fc24/0/0001-7407814449124476378.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261014%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261014T070929Z&X-Amz-Expires=31151&X-Amz-Signature=7e0fab292fbbcb2b34ded34cad34f08d4ef941d83a04d100b8a4108837bedd18&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2015%3A48%3A40%20GMT' -o assets/images/kitchen-bundle-1.png
+          curl -fLsS --retry 2 'https://export-download.canva.com/f77b4d04-78d1-46c6-9570-2ba6ce5b966c/0/0001-234706142809249232.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261013T194128Z&X-Amz-Expires=71022&X-Amz-Signature=356d17b02f01084361d9145087d62a5ace90966a6954f6acee177227013faedf&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2015%3A25%3A10%20GMT' -o assets/images/kitchen-bundle-2.png
+          curl -fLsS --retry 2 'https://export-download.canva.com/49c1c77f-24e8-4c31-bea0-d5d9c7048e49/0/0001-5269730526656308635.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261014%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261014T081316Z&X-Amz-Expires=27628&X-Amz-Signature=ac82a06faaa49d31bd8a784e51a873a189478719214e8ccf2cfc4f48626a02a6&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2015%3A53%3A44%20GMT' -o assets/images/kitchen-bundle-3.png
+          python3 - <<'PY'
+          import struct
+          for i in range(1,4):
+              path=f'assets/images/kitchen-bundle-{i}.png'
+              with open(path,'rb') as f: header=f.read(24)
+              assert header[:8]==b'\x89PNG\r\n\x1a\n',path
+              w,h=struct.unpack('>II',header[16:24])
+              assert w>=250 and h>=400,(path,w,h)
+              print(path,w,h)
+          PY
+      - name: Commit kitchen photos
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/images/kitchen-bundle-*.png
+          git diff --cached --quiet && exit 0
+          git commit -m "Add three kitchen bundle photos"
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
