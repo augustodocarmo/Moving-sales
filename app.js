@@ -176,9 +176,9 @@ const products = [
     images: ["coffee-collage.webp", "coffee-1.webp", "coffee-2.webp"]
   },
   {
-    id: "popcorn", syncKey: "Mini Popcorn Maker", name: "Mini Popcorn Maker", price: 8,
-    category: "Kitchen", description: "Small home popcorn machine, great for movie nights. Good working condition",
-    images: []
+    id: "popcorn", syncKey: "Mini Popcorn Maker", name: "Red Electric Popcorn Maker", price: 8,
+    category: "Kitchen", description: "Red countertop popcorn maker with clear dome. Photos show it with kernels and freshly popped popcorn. Good working condition. Collection in Warrington.",
+    images: ["popcorn-1.png", "popcorn-2.png"]
   },
   {
     id: "round-table", syncKey: null, name: "Round Black Table", price: 0,
