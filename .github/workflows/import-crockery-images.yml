@@ -1,0 +1,43 @@
+name: Import crockery gallery images
+on:
+  push:
+    paths:
+      - '.github/workflows/import-crockery-images.yml'
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download and validate product photos
+        run: |
+          set -euo pipefail
+          mkdir -p assets/images
+          curl -fLsS --retry 2 'https://export-download.canva.com/56439b51-2695-46b6-b334-f22ad8aa0a6a/0/0001-150263647137871343.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261013T162101Z&X-Amz-Expires=81678&X-Amz-Signature=80b4e444c32e1d6fd58b1f1393d99e30120347d70191b8ec9f1bb295d29d479f&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2015%3A02%3A19%20GMT' -o assets/images/crockery-1.png
+          curl -fLsS --retry 2 'https://export-download.canva.com/ca88eb57-2971-49e7-926e-69f8489bc37d/0/0001-6706378805758991900.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261014%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261014T074505Z&X-Amz-Expires=28165&X-Amz-Signature=6c7f96e0aea2f2438d6f50ecc0d2c7f1f9618e3664b39d0aaa342c7d242f882a&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2015%3A34%3A30%20GMT' -o assets/images/crockery-2.png
+          curl -fLsS --retry 2 'https://export-download.canva.com/7b21116e-5297-40d8-bfe0-209fcf1a32d0/0/0001-6182835348710878570.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261013T194156Z&X-Amz-Expires=71564&X-Amz-Signature=df18e74bf13042a0c6598383fe30bf24c57b5ca8ea3f66baa7789f5694f16160&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2015%3A34%3A40%20GMT' -o assets/images/crockery-3.png
+          curl -fLsS --retry 2 'https://export-download.canva.com/4f82d14b-1993-406f-b745-fe533b8deac7/0/0001-8208329281198927236.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261014%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261014T045109Z&X-Amz-Expires=38817&X-Amz-Signature=7834087ec2438dd341ee210572744eafad97123f67513905af550af623a39da4&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2015%3A38%3A06%20GMT' -o assets/images/crockery-4.png
+          curl -fLsS --retry 2 'https://export-download.canva.com/48ba644e-f4c3-453c-a038-07d59a880b89/0/0001-8673325940089698689.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261014%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261014T101112Z&X-Amz-Expires=19399&X-Amz-Signature=2b413357f85e84a9fd9e38e13e541de9534e785c9a0c3238ccd6f2246caf9224&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2015%3A34%3A31%20GMT' -o assets/images/crockery-5.png
+          curl -fLsS --retry 2 'https://export-download.canva.com/e57e89ba-e5d5-41ff-98b1-61b88f262ef3/0/0001-4871161957310456570.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261014%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261014T125348Z&X-Amz-Expires=7453&X-Amz-Signature=1fd3f42e8cf7a5d5aab48b7d5da07ea6dc1d3a5decba3a59678af3df92947f95&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2014%3A58%3A01%20GMT' -o assets/images/crockery-6.png
+          python3 - <<'PY'
+          import struct
+          for i in range(1,7):
+              path=f'assets/images/crockery-{i}.png'
+              with open(path,'rb') as f: head=f.read(24)
+              assert head[:8]==b'\x89PNG\r\n\x1a\n',path
+              w,h=struct.unpack('>II',head[16:24])
+              assert w>=250 and h>=450,(path,w,h)
+              print(path,w,h)
+          PY
+      - name: Commit gallery photos
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/images/crockery-*.png
+          git diff --cached --quiet && exit 0
+          git commit -m "Add six crockery gallery images"
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
