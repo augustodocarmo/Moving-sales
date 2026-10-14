@@ -1,6 +1,8 @@
 name: Import hanger and cake photos
 on:
-  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/import-hangers-cake.yml'
 permissions:
   contents: write
 jobs:
@@ -8,4 +10,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: echo Ready for image import
+      - name: Download original photos
+        run: |
+          set -euo pipefail
+          mkdir -p assets/images
+          curl -fLsS --retry 2 'https://export-download.canva.com/2cfeb6d0-485a-4fe6-b50c-bd28eed8a625/0/0001-7528285750135106558.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261014%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261014T125940Z&X-Amz-Expires=18227&X-Amz-Signature=e611fe6c2a30b3095c020b43c995ec34e0020e8dae15459356d4e0827f1c3b9d&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2018%3A03%3A27%20GMT' -o assets/images/hangers-1.png
+          curl -fLsS --retry 2 'https://export-download.canva.com/c252fc79-08f9-4f0c-aab4-e75dcd505d68/0/0001-5097467848966084077.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261013T210524Z&X-Amz-Expires=75670&X-Amz-Signature=569d4cfd21172bda00661b03f09a3a59c9fcb068676d33e7b1145dcbb0703d86&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2018%3A06%3A34%20GMT' -o assets/images/hangers-2.png
+          curl -fLsS --retry 2 'https://export-download.canva.com/19e87916-370d-4498-a624-3308d908efa4/0/0001-4593064692913438072.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261014%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261014T102925Z&X-Amz-Expires=27108&X-Amz-Signature=f23356a0bc6cb397ff23fa71af78cb329af809a08a0343416fe72abb52ede773&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Wed%2C%2014%20Oct%202026%2018%3A01%3A13%20GMT' -o assets/images/cake-dome-1.png
+          file assets/images/hangers-*.png assets/images/cake-dome-1.png
+      - name: Commit photos
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/images/hangers-*.png assets/images/cake-dome-1.png
+          git diff --cached --quiet && exit 0
+          git commit -m "Add hanger and cake dome product photos"
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
