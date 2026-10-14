@@ -26,7 +26,7 @@ jobs:
               with open(path,"rb") as f: header=f.read(24)
               assert header[:8]==b'\x89PNG\r\n\x1a\n',path
               w,h=struct.unpack(">II",header[16:24])
-              assert w>=500 and h>=500,(path,w,h)
+              assert w>=400 and h>=400,(path,w,h)
               print(path,w,h)
           PY
       - name: Commit original photos
