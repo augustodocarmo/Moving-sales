@@ -292,7 +292,7 @@ function openItem(id) {
     <p class="dialog-price ${p.price===0?"free":""}">${money(p.price)}</p>
     <p class="dialog-description">${escapeHtml(p.description)}</p>
     <div class="dialog-actions"><button class="btn btn--primary" data-dialog-interest="${p.id}">I’m interested</button></div>
-    <p class="dialog-note">Collection in Warrington. Please arrange collection before travelling.</p>
+    <p class="dialog-note">Collection by arrangement. Please confirm the collection location before travelling.</p>
   </div></div>`;
   function showPhoto(next) {
     if (photos.length < 2) return;
@@ -329,7 +329,7 @@ function openItem(id) {
 async function enquire(id) {
   const p = catalogue.find(x => x.id === id);
   if (!p) return;
-  const message = `Hi, I’m interested in the ${p.name} (${money(p.price)}) from your Warrington moving sale. Is it still available?`;
+  const message = `Hi, I’m interested in the ${p.name} (${money(p.price)}) from your Moving Sale catalogue. Is it still available, and where can I collect it?`;
   if (CONTACT.whatsappNumber) {
     window.open(`https://wa.me/${CONTACT.whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank", "noopener");
     return;
