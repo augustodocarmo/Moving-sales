@@ -273,12 +273,16 @@ function render() {
 function openItem(id) {
   const p = catalogue.find(x => x.id === id);
   if (!p) return;
-  const gallery = p.embedUrl ? `<div class="dialog-gallery"><iframe class="dialog-gallery__main promo-embed promo-embed--dialog" src="${p.embedUrl}" title="${escapeHtml(p.name)}"></iframe></div>` : p.images.length ? `
+  let index = 0;
+  const photos = p.images || [];
+  const gallery = photos.length ? `
     <div class="dialog-gallery">
-      <img id="dialogMainImage" class="dialog-gallery__main" src="${imagePath(p.images[0])}" alt="${escapeHtml(p.name)}">
-      ${p.images.length > 1 ? `<div class="dialog-thumbs">${p.images.map((img,i) => `<button class="${i===0?"active":""}" data-img="${img}" aria-label="View photo ${i+1}"><img src="${imagePath(img)}" alt=""></button>`).join("")}</div>` : ""}
+      <div class="gallery-stage">
+        <img id="dialogMainImage" class="dialog-gallery__main" src="${imagePath(photos[0])}" alt="${escapeHtml(p.name)} — photo 1">
+        ${photos.length > 1 ? `<button type="button" class="gallery-arrow gallery-arrow--prev" data-gallery-step="-1" aria-label="Previous photo">‹</button><button type="button" class="gallery-arrow gallery-arrow--next" data-gallery-step="1" aria-label="Next photo">›</button><span class="gallery-count" aria-live="polite">1 / ${photos.length}</span>` : ""}
+      </div>
+      ${photos.length > 1 ? `<div class="dialog-thumbs">${photos.map((img,i) => `<button type="button" class="${i===0?"active":""}" data-img-index="${i}" aria-label="View photo ${i+1}"><img src="${imagePath(img)}" alt=""></button>`).join("")}</div>` : ""}
     </div>` : `<div class="dialog-gallery placeholder"><div><span>${categoryIcons[p.category] || "📦"}</span>Photo coming soon</div></div>`;
-
   dialogContent.innerHTML = `<div class="dialog-grid">${gallery}<div class="dialog-details">
     <span class="category">${escapeHtml(p.category)} · Available</span>
     <h2>${escapeHtml(p.name)}</h2>
@@ -287,12 +291,34 @@ function openItem(id) {
     <div class="dialog-actions"><button class="btn btn--primary" data-dialog-interest="${p.id}">I’m interested</button></div>
     <p class="dialog-note">Collection in Warrington. Please arrange collection before travelling.</p>
   </div></div>`;
-
-  dialogContent.querySelectorAll(".dialog-thumbs button").forEach(btn => btn.addEventListener("click", () => {
-    document.getElementById("dialogMainImage").src = imagePath(btn.dataset.img);
-    dialogContent.querySelectorAll(".dialog-thumbs button").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-  }));
+  function showPhoto(next) {
+    if (photos.length < 2) return;
+    index = (next + photos.length) % photos.length;
+    const img = dialogContent.querySelector("#dialogMainImage");
+    img.src = imagePath(photos[index]);
+    img.alt = p.name + " — photo " + (index + 1);
+    const count = dialogContent.querySelector(".gallery-count");
+    if (count) count.textContent = (index + 1) + " / " + photos.length;
+    dialogContent.querySelectorAll("[data-img-index]").forEach((btn,i) => {
+      btn.classList.toggle("active", i === index);
+      if (i === index) btn.scrollIntoView({block:"nearest",inline:"nearest"});
+    });
+  }
+  dialogContent.querySelectorAll("[data-gallery-step]").forEach(btn =>
+    btn.addEventListener("click", () => showPhoto(index + Number(btn.dataset.galleryStep))));
+  dialogContent.querySelectorAll("[data-img-index]").forEach(btn =>
+    btn.addEventListener("click", () => showPhoto(Number(btn.dataset.imgIndex))));
+  const stage = dialogContent.querySelector(".gallery-stage");
+  if (stage && photos.length > 1) {
+    let startX = null;
+    stage.addEventListener("touchstart", e => { startX = e.touches[0]?.clientX ?? null; }, {passive:true});
+    stage.addEventListener("touchend", e => {
+      if (startX === null) return;
+      const dx = (e.changedTouches[0]?.clientX ?? startX) - startX;
+      if (Math.abs(dx) > 40) showPhoto(index + (dx < 0 ? 1 : -1));
+      startX = null;
+    }, {passive:true});
+  }
   dialogContent.querySelector("[data-dialog-interest]")?.addEventListener("click", () => enquire(p.id));
   dialog.showModal();
 }
