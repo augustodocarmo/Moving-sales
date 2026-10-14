@@ -23,7 +23,7 @@ const PRICE_OVERRIDES = {
   coalport: 36,
   cookware: 0,
   projector: 16,
-  crockery: 8,
+  crockery: 15,
   bedding: 8,
   lamps: 8,
   coffee: 12,
