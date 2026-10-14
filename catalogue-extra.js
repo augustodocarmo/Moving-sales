@@ -25,6 +25,24 @@ const extraProducts = [
     category: "Kitchen",
     description: "Complete kitchen utensils and cutlery bundle for £15. Includes assorted serving spoons, ladle, spatulas, measuring spoons, potato masher, grater, peeler, pizza cutter, tea strainers, bottle opener, corkscrew, can opener, garlic press, plus cutlery and reusable metal straws with cleaning brushes, as pictured. Collection in Warrington.",
     images: ["kitchen-bundle-1.png", "kitchen-bundle-2.png", "kitchen-bundle-3.png"]
+  },
+  {
+    id: "vax-upright",
+    syncKey: null,
+    name: "Vax Air Stretch Upright Vacuum Cleaner",
+    price: 20,
+    category: "Home",
+    description: "Vax Air Stretch upright corded vacuum cleaner in grey and orange, with cyclonic dust container (1.5L shown in product material). Used. Manufacturer/product images are illustrative; please ask about the condition and included attachments before collection. Collection in Warrington.",
+    images: ["vax-1.png", "vax-2.png"]
+  },
+  {
+    id: "yashe-cookware",
+    syncKey: null,
+    name: "Cream Cookware Set – Used",
+    price: 5,
+    category: "Kitchen",
+    description: "Complete used cookware set for £5, as represented by the illustrative 13-piece set images (pans, lids, removable handles and protectors). IMPORTANT: The images are illustrative product photos, not photographs of the actual used set. Collection in Warrington.",
+    images: ["yashe-cookware-1.png", "yashe-cookware-2.png"]
   }
 ];
 
