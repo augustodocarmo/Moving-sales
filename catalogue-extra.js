@@ -43,6 +43,24 @@ const extraProducts = [
     category: "Kitchen",
     description: "Complete used cookware set for £5, as represented by the illustrative 13-piece set images (pans, lids, removable handles and protectors). IMPORTANT: The images are illustrative product photos, not photographs of the actual used set. Collection in Warrington.",
     images: ["yashe-cookware-1.png", "yashe-cookware-2.png"]
+  },
+  {
+    id: "hangers-39",
+    syncKey: null,
+    name: "39 Clothes Hangers – Wooden & Black",
+    price: 5,
+    category: "Home",
+    description: "Bundle of 39 clothes hangers, including natural wooden hangers and black velvet-style hangers, with metal hooks. Sold together for £5. Collection in Warrington.",
+    images: ["hangers-1.png", "hangers-2.png"]
+  },
+  {
+    id: "cake-dome",
+    syncKey: null,
+    name: "Cake Dome with Wooden Base",
+    price: 5,
+    category: "Kitchen",
+    description: "Clear cake dome with a wooden serving base and top handle. Used condition, with visible scratches on the transparent cover as shown in the photograph. £5. Collection in Warrington.",
+    images: ["cake-dome-1.png"]
   }
 ];
 
