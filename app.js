@@ -49,7 +49,8 @@ const STATUS_OVERRIDES = {
   games: "Gone",
   bedding: "Gone",
   popcorn: "Gone",
-  "cake-dome": "Gone"
+  "cake-dome": "Gone",
+  books: "Gone"
 };
 
 const products = [
