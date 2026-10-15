@@ -45,7 +45,11 @@ const STATUS_OVERRIDES = {
   sofa: "Gone",
   coalport: "Gone",
   workout: "Gone",
-  projector: "Gone"
+  projector: "Gone",
+  games: "Gone",
+  bedding: "Gone",
+  popcorn: "Gone",
+  "cake-dome": "Gone"
 };
 
 const products = [
