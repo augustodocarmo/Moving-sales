@@ -44,7 +44,8 @@ const STATUS_OVERRIDES = {
   armchair: "Gone",
   sofa: "Gone",
   coalport: "Gone",
-  workout: "Gone"
+  workout: "Gone",
+  projector: "Gone"
 };
 
 const products = [
@@ -228,7 +229,7 @@ function buildFilters() {
 }
 
 function visibleProducts() {
-  let rows = catalogue.filter(p => p.status.toLowerCase() === "available");
+  let rows = catalogue.filter(p => p.status.toLowerCase() === "available" && Number(p.price) > 0);
   if (activeFilter === "Free") rows = rows.filter(p => Number(p.price) === 0);
   else if (activeFilter !== "All") rows = rows.filter(p => p.category === activeFilter);
   if (query) {
